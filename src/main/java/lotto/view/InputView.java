@@ -1,26 +1,51 @@
 package lotto.view;
 
-import camp.nextstep.edu.missionutils.Console;
+import java.util.Arrays;
 import java.util.List;
-import lotto.util.InputValidator;
+import java.util.stream.Collectors;
+
+import camp.nextstep.edu.missionutils.Console;
 
 public class InputView {
 
-    public int inputPurchaseLotto() {
-        System.out.println("구입금액을 입력해 주세요.");
-        final String price = Console.readLine();
-        return InputValidator.validatePrice(price);
-    }
+	private InputView() {
+	}
 
-    public List<Integer> inputPrizeLottoNumber() {
-        System.out.println("당첨 번호를 입력해 주세요.");
-        String prizeLottoNumber = Console.readLine();
-        return InputValidator.validatePrizeLottoNumbers(prizeLottoNumber);
-    }
+	public static int inputPurchaseLotto() {
+		final String price = Console.readLine();
+		validatePrice(price);
+		return toInteger(price);
+	}
 
-    public int inputBonusLottoNumber() {
-        System.out.println("보너스 번호를 입력해 주세요.");
-        final String bonusLottoNumber = Console.readLine();
-        return InputValidator.validateBonusLottoNumber(bonusLottoNumber);
-    }
+	public static List<Integer> inputPrizeLottoNumber() {
+		String prizeLottoNumber = Console.readLine();
+		validatePrice(prizeLottoNumber);
+		return splitWord(prizeLottoNumber);
+	}
+
+	public static int inputBonusLottoNumber() {
+		final String bonusLottoNumber = Console.readLine();
+		validatePrice(bonusLottoNumber);
+		return toInteger(bonusLottoNumber);
+	}
+
+	private static int toInteger(String input) {
+		try {
+			return Integer.parseInt(input);
+		} catch (NumberFormatException e) {
+			throw new IllegalArgumentException("[ERROR] 숫자를 입력해 주세요.");
+		}
+	}
+
+	private static List<Integer> splitWord(String input) {
+		return Arrays.stream(input.split(","))
+			.map(Integer::parseInt)
+			.collect(Collectors.toList());
+	}
+
+	private static void validatePrice(String input) {
+		if (input == null || input.isBlank()) {
+			throw new IllegalArgumentException("[ERROR] 빈 값이 입력되었습니다.");
+		}
+	}
 }
